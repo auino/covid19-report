@@ -1,0 +1,245 @@
+\documentclass[12pt]{article}
+
+\usepackage{float}
+\usepackage{morefloats}
+
+\usepackage{graphicx}
+\graphicspath{ {./img/} }
+
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{pgf,pgffor}
+
+\usepackage{xstring}
+
+\usepackage{hyperref}
+
+\title{covid19-report}
+\author{Enrico Cambiaso}
+\date{\today}
+
+\newcommand{\figureswidth}{8cm}
+
+\newcommand{\fieldsitalia}{ricoverati_con_sintomi,terapia_intensiva,totale_ospedalizzati,totale_positivi,nuovi_positivi,nuovi_tamponi,deceduti,nuovipositivi_su_nuovitamponi}
+\newcommand{\fieldsitaliatext}{Ricoverati con sintomi,Terapia intensiva,Totale ospedalizzati,Totale positivi,Nuovi positivi,Nuovi tamponi,Deceduti,Rapporto nuovi positivi su nuovi tamponi}
+
+\newcommand{\fieldsregioni}{ricoverati_con_sintomi,terapia_intensiva,totale_ospedalizzati,totale_positivi,nuovi_positivi,nuovi_tamponi,deceduti,nuovipositivi_su_nuovitamponi}
+\newcommand{\fieldsregionitext}{Ricoverati con sintomi,Terapia intensiva,Totale ospedalizzati,Totale positivi,Nuovi positivi,Tamponi,Deceduti,Rapporto nuovi positivi su nuovi tamponi}
+
+\newcommand{\fieldsprovince}{totale_casi}
+\newcommand{\fieldsprovincetext}{Totale casi}
+
+\newcommand{\regions}{abruzzo,basilicata,calabria,campania,emiliaromagna,friuliveneziagiulia,lazio,liguria,lombardia,marche,molise,pabolzano,patrento,piemonte,puglia,sardegna,sicilia,toscana,umbria,valledaosta,veneto}
+
+%\newcommand{\province}{}
+
+\usepackage{xparse}
+\ExplSyntaxOn
+\NewExpandableDocumentCommand{\GetListMember}{mm}
+ {
+  \bool_lazy_and:nnTF { \tl_if_single_p:n { #1 } } { \token_if_cs_p:N #1 }
+   {
+    \clist_item:Nn #1 { #2 }
+   }
+   {
+    \clist_item:nn { #1 } { #2 }
+   }
+ }
+\ExplSyntaxOff
+
+\newcommand{\regionstext}{Abruzzo,Basilicata,Calabria,Campania,Emilia Romagna,Friuli Venezia Giulia,Lazio,Liguria,Lombardia,Marche,Molise,P.A. Bolzano,P.A. Trento,Piemonte,Puglia,Sardegna,Sicilia,Toscana,Umbria,Valle D'Aosta,Veneto}
+
+\setcounter{tocdepth}{2}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\vfill
+{\centering \small \href{http://github.com/auino/covid19-report}{github.com/auino/covid19-report} \par}
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\begin{center}
+\emph{This project is supposed to be used for Italian users. Therefore, the whole content of the generated documents is in Italian language.}
+\end{center}
+
+\section{Introduzione}
+
+Questo progetto ha lo scopo di raggruppare i dati disponibili pubblicamente da diverse fonti e fornire un report unificato che analizzi e processi i dati per fornire una visione complessiva relativamente all'andamento del Covid-19 in Italia.
+
+Maggiori informazioni sul software alla base di questo report sono disponibili sulla relativa pagina \href{https://github.com}{GitHub}: \href{https://github.com/auino/covid19-report}{github.com/auino/covid19-report}.
+
+\subsection{Fonti utilizzate}
+
+A seguire la lista di fonti utilizzate:
+
+\begin{itemize}
+	\item \href{https://github.com/pcm-dpc/COVID-19}{pcm-dpc/COVID-19} per il recupero di dati a livello nazionale, regionale e provinciale
+	\item \href{https://github.com/CloudItaly/Indice-RT}{CloudItaly/Indice-RT} per il recupero dei dati regionali relativi all'indice $R_t$ misurato
+	\item \href{http://news.google.com}{Google News} per ricerca di notizie in tema Covid-19
+\end{itemize}
+
+\subsection{Estensioni}
+
+Per eventuali estensioni, si rimanda alla pagina \href{https://github.com}{GitHub} del progetto:\\
+\href{https://github.com/auino/covid19-report}{github.com/auino/covid19-report}.
+
+\newpage
+
+\section{Andamento nazionale}
+
+\subsection{Dati relativi alla giornata odierna}
+
+\input{summary_italia}
+
+Vengono a seguire riportate le ultime informazioni a livello nazionale:
+\begin{itemize}
+	\item Ricoverati con sintomi: $\italiaricoveraticonsintomi$
+	\item Soggetti in terapia intensiva: $\italiaterapiaintensiva$
+	\item Totale ospedalizzati: $\italiatotaleospedalizzati$
+	\item Soggetti in isolamento domiciliare: $\italiaisolamentodomiciliare$
+	\item Totale positivi: $\italiatotalepositivi$
+	\item Variazione sul numero totale dei positivi: $\italiavariazionetotalepositivi$
+	\item Nuovi positivi: $\italianuovipositivi$
+	\item Soggetti dimessi guariti: $\italiadimessiguariti$
+	\item Soggetti deceduti: $\italiadeceduti$
+	\item Casi da sospetto diagnostico: $\italiacasidasospettodiagnostico$
+	\item Casi da screening: $\italiacasidascreening$
+	\item Totale casi: $\italiatotalecasi$
+	\item Tamponi: $\italiatamponi$
+	\item Rapporto nuovi positivi su nuovi tamponi: $\italianuovipositivisunuovitamponi$
+	\item Nuovi tamponi: $\italianuovitamponi$
+	\item Casi testati: $\italiacasitestati$
+	\item Ingressi in terapia intensiva: $\italiaingressiterapiaintensiva$
+	\item Totale positivi al test molecolare: $\italiatotalepositivitestmolecolare$
+	\item Totale positivi al test antigenico rapido: $\italiatotalepositivitestantigenicorapido$
+	\item Tamponi del test molecolare: $\italiatamponitestmolecolare$
+	\item Tamponi del test antigenico rapido: $\italiatamponitestantigenicorapido$
+\end{itemize}
+
+\subsection{Ultime notizie}
+
+A seguire una lista di notizie odierne sull'argomento, recuperate da \href{http://news.google.it}{Google News}.
+\begin{itemize}
+	\input{news_italia}
+\end{itemize}
+
+\subsection{Ultimi dati su indice $R_t$}
+
+\begin{center}
+\begin{tabular}{ |c|c|c|} 
+	\hline
+	\bfseries{Regione} & \bfseries{Indice $R_t$} \\ \hline
+	\input{italia-rt-table.tex}
+	\hline
+\end{tabular}
+\end{center}
+
+\input{italia-rt.tex}
+
+Dati aggiornati al \italiaindicertdata.
+
+\subsection{Ultimi dati su rapporto nuovi positivi su nuovi tamponi}
+
+\begin{center}
+\begin{tabular}{ |c|c|c|} 
+	\hline
+	\bfseries{Regione} & \bfseries{Rapporto misurato (\%)} \\ \hline
+	\input{italia-nuovipositivisunuovitamponi-table.tex}
+	\hline
+\end{tabular}
+\end{center}
+
+\subsection{Grafici di monitoraggio}
+
+\foreach \x [count=\xi] in \fieldsitalia 
+{
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\figureswidth]{italia-\x.png}
+	\label{italia-\x}
+		\caption{\GetListMember{\fieldsitaliatext}{\xi} in Italia}
+	\end{figure}
+}
+
+\newpage
+
+\section{Andamento per regione}
+
+\foreach \r [count=\ri] in \regions 
+{
+	\subsection{\GetListMember{\regionstext}{\ri}}
+
+	\subsubsection*{Dati relativi alla giornata odierna}
+
+	\input{summary_regione_\r}
+
+	Vengono a seguire riportate le ultime informazioni a livello regionale, per la regione \r:
+	\begin{itemize}
+			\item Ricoverati con sintomi: $\regionericoveraticonsintomi$
+			\item Soggetti in terapia intensiva: $\regioneterapiaintensiva$
+			\item Totale ospedalizzati: $\regionetotaleospedalizzati$
+			\item Soggetti in isolamento domiciliare: $\regioneisolamentodomiciliare$
+			\item Totale positivi: $\regionetotalepositivi$
+			\item Variazione sul numero totale dei positivi: $\regionevariazionetotalepositivi$
+			\item Nuovi positivi: $\regionenuovipositivi$
+			\item Soggetti dimessi guariti: $\regionedimessiguariti$
+			\item Soggetti deceduti: $\regionedeceduti$
+			\item Totale casi: $\regionetotalecasi$
+			\item Tamponi: $\regionetamponi$
+			\item Rapporto nuovi positivi su nuovi tamponi: $\regionenuovipositivisunuovitamponi$
+			\item Nuovi tamponi: $\regionenuovitamponi$
+			\item Casi testati: $\regionecasitestati$
+			\item Ingressi in terapia intensiva: $\regioneingressiterapiaintensiva$
+			\item Totale positivi al test molecolare: $\regionetotalepositivitestmolecolare$
+			\item Totale positivi al test antigenico rapido: $\regionetotalepositivitestantigenicorapido$
+			\item Tamponi del test molecolare: $\regionetamponitestmolecolare$
+			\item Tamponi del test antigenico rapido: $\regionetamponitestantigenicorapido$
+	\end{itemize}
+
+	\subsubsection*{Grafici di monitoraggio}
+
+	\foreach \x [count=\xi] in \fieldsregioni 
+	{
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=\figureswidth]{\r-\x.png}
+		\label{\r-\x}
+		\caption{\GetListMember{\fieldsregionitext}{\xi} in \GetListMember{\regionstext}{\ri}}
+		\end{figure}
+	}
+
+	\input{province_\r}
+
+	\foreach \p [count=\pi] in \regioniprovince 
+	{
+		\subsubsection{\GetListMember{\regioniprovincetext}{\pi}}
+		
+		\subsubsection*{Grafici di monitoraggio}
+
+		\foreach \xx [count=\xxi] in \fieldsprovince 
+		{
+			\begin{figure}[H]
+				\centering
+				\includegraphics[width=\figureswidth]{\p-\xx.png}
+				\label{\p-\xx}
+				\caption{\GetListMember{\fieldsprovincetext}{\xxi} in \GetListMember{\regioniprovincetext}{\pi}}
+			\end{figure}
+		}
+	}
+
+	\newpage
+}
+
+%\section{Conclusioni}
+
+%TODO
+
+\end{document}
