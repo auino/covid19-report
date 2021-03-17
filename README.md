@@ -1,10 +1,12 @@
 # covid19-report
 
-''This project is supposed to be used for Italian users. Therefore, the whole content of the generated documents, including the README file, is in Italian language.''
+*This project is supposed to be used for Italian users. Therefore, the whole content of the generated documents, including the README file, is in Italian language.*
 
 ### Introduzione ###
 
 Questo progetto ha lo scopo di raggruppare i dati disponibili pubblicamente da diverse fonti e fornire un report unificato che analizzi e processi i dati per fornire una visione complessiva relativamente all'andamento del Covid-19 in Italia.
+
+L'ultima versione del report è disponibile all'interno del file [report-latest.pdf](https://raw.githubusercontent.com/auino/covid19-report/master/report-latest.pdf).
 
 ### Caratteristiche del software ###
 
