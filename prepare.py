@@ -41,6 +41,12 @@ NEWS_COUNTRY = 'IT'
 NEWS_SEARCHES = ['covid', 'coronavirus']
 NEWS_PERIOD = '1d'
 
+ONDATE = [
+	{'name': 1, 'to':'2020-06'},
+	{'name': 2, 'from':'2020-10', 'to':'2020-12'},
+	{'name': 3, 'from':'2021-02'}
+]
+
 # converts an input text t to simple lowercase text without special characters
 def simpletext(t):
 	l_empty = ['-', '\'', ' ', '.', '_bozen']
@@ -48,6 +54,7 @@ def simpletext(t):
 	t = t.lower()
 	for c in l_empty: t = t.replace(c, '')
 	for c in l_underscore: t = t.replace(c, '_')
+	if '(' in t: t = t[:t.index('(')]
 	return t
 
 # converts an input text t to a latex-friendly text
@@ -65,15 +72,18 @@ def getdates(l, k):
 		r.append(v)
 	return r
 
-# filters the list l by checking if the property k has value v (b=True to check only if k value starts with v, b=False to check if k value is equal to v; f=True to include all objects after a first match is found, f=False to always include only matching objects)
-def filter(l, k, v, b=False, f=False):
-	r = []
+# filters the list l by checking if the property k has value v (b=True to check only if k value starts with v, b=False to check if k value is equal to v; f=True to include all objects after a first match is found, f=False to always include only matching objects; r=True to include all objects until the match is found, r=False to include objects from the match to the end of the list)
+def filter(l, k, v, b=False, f=False, r=False):
+	new_l = l.copy()
+	if r: new_l.reverse()
+	res = []
 	found = False
-	for ll in l:
+	for ll in new_l:
 		if found or (b and ll.get(k).startswith(v)) or (not b and ll.get(k) == v):
-			r.append(ll)
+			res.append(ll)
 			found = f
-	return r
+	if r: res.reverse()
+	return res
 
 # returns the list of unique values on l, for the k property
 def query(l, k):
@@ -146,24 +156,34 @@ def download(u):
 	records = generateobjects(headers, records)
 	return records
 
-def generate_graph(records, date_key, field_key, field_title, where):
+def generate_graph(records, date_key, field_key, field_title, where, filter_date=None):
 	dates = getdates(records, date_key)
 	y = []
 	for i in range(0, len(records)):
 		v = records[i].get(field_key)
 		if v is None: v = 0
 		y.append(int(v))
-	filename = './out/img/{}-{}.png'.format(simpletext(where), field_key)
+	filename = './out/img/{}-{}{}.png'.format(simpletext(where), field_key, ('' if filter_date is None else '_{}'.format(filter_date)))
 	save_graph(dates, [y], '{} in {}'.format(field_title, where), filename)
 
 def generate_graph_italia(records, date_key, field_key, field_title):
-	return generate_graph(records, date_key, field_key, field_title, 'Italia')
+	generate_graph(records, date_key, field_key, field_title, 'Italia')
+	for o in ONDATE:
+		filtered_data = records
+		if o.get('from') != None: filtered_data = filter(filtered_data, date_key, o.get('from'), b=True, f=True)
+		if o.get('to') != None: filtered_data = filter(filtered_data, date_key, o.get('to'), b=True, f=True, r=True)
+		generate_graph(filtered_data, date_key, field_key, field_title, 'Italia (ondata {})'.format(o.get('name')), o.get('name'))
 
 def generate_graphs_regioni(records, date_key, region_key, field_key, field_title):
 	regioni = query(records, region_key)
 	for regione in regioni:
 		r = filter(records, region_key, regione)
 		generate_graph(r, date_key, field_key, field_title, regione)
+		for o in ONDATE:
+			filtered_data = r
+			if o.get('from') != None: filtered_data = filter(filtered_data, date_key, o.get('from'), b=True, f=True)
+			if o.get('to') != None: filtered_data = filter(filtered_data, date_key, o.get('to'), b=True, f=True, r=True)
+			generate_graph(filtered_data, date_key, field_key, field_title, '{} (ondata {})'.format(regione, o.get('name')), o.get('name'))
 
 def generate_graphs_province(records, date_key, provincia_key, field_key, field_title):
 	province = query(records, provincia_key)
@@ -171,6 +191,11 @@ def generate_graphs_province(records, date_key, provincia_key, field_key, field_
 		if '/' in provincia: continue
 		r = filter(records, provincia_key, provincia)
 		generate_graph(r, date_key, field_key, field_title, provincia)
+		for o in ONDATE:
+			filtered_data = r
+			if o.get('from') != None: filtered_data = filter(filtered_data, date_key, o.get('from'), b=True, f=True)
+			if o.get('to') != None: filtered_data = filter(filtered_data, date_key, o.get('to'), b=True, f=True, r=True)
+			generate_graph(filtered_data, date_key, field_key, field_title, '{} (ondata {})'.format(provincia, o.get('name')), o.get('name'))
 
 def generate_graph_rt(dates, records, region):
 	filename = './out/img/{}-rt.png'.format(simpletext(region))
@@ -222,6 +247,9 @@ def get_news():
 	for s in NEWS_SEARCHES:
 		search = gn.search(s, when=NEWS_PERIOD)
 		r += search.get('entries')
+		print(r[0])
+		import time
+		time.sleep(100)
 	return r
 
 # getting italian data
