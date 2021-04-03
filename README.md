@@ -6,7 +6,7 @@
 
 Questo progetto ha lo scopo di raggruppare i dati disponibili pubblicamente da diverse fonti e fornire un report unificato che analizzi e processi i dati per fornire una visione complessiva relativamente all'andamento del Covid-19 in Italia.
 
-L'ultima versione del report è disponibile all'interno del file [report-latest.pdf](https://raw.githubusercontent.com/auino/covid19-report/master/report-latest.pdf).
+L'ultima versione del report è disponibile all'interno del file [report-latest.pdf](https://raw.githubusercontent.com/auino/covid19-report/master/report-latest.pdf). Indicativamente, questo file viene aggiornato automaticamente ogni giorno alle 19:30.
 
 ### Caratteristiche del software ###
 
@@ -15,6 +15,7 @@ L'ultima versione del report è disponibile all'interno del file [report-latest.
 * Integrazione con i dati della protezione civile (grazie a [@pcm-dpc](https://github.com/pcm-dpc/COVID-19))
 * Integrazione con i dati relativi all'indice Rt (grazie a [@CloudItaly](https://github.com/CloudItaly/Indice-RT))
 * Integrazione con [Google News](http://news.google.com)
+* Supporto ad una visualizzazione specifica delle diverse ondate che caratterizzano la diffusione del virus
 
 ### Sorgenti dati utilizzate ###
 
