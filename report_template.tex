@@ -33,6 +33,8 @@
 
 \newcommand{\regions}{abruzzo,basilicata,calabria,campania,emiliaromagna,friuliveneziagiulia,lazio,liguria,lombardia,marche,molise,pabolzano,patrento,piemonte,puglia,sardegna,sicilia,toscana,umbria,valledaosta,veneto}
 
+\newcommand{\ondate}{1,2,3}
+
 %\newcommand{\province}{}
 
 \usepackage{xparse}
@@ -167,6 +169,16 @@ Dati aggiornati al \italiaindicertdata.
 	\label{italia-\x}
 		\caption{\GetListMember{\fieldsitaliatext}{\xi} in Italia}
 	\end{figure}
+
+	\foreach \o [count=\oi] in \ondate 
+	{
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=\figureswidth]{italia-\x_\o.png}
+		\label{italia-\x-\o}
+			\caption{\GetListMember{\fieldsitaliatext}{\xi} in Italia (ondata \o)}
+		\end{figure}
+	}
 }
 
 \newpage
@@ -214,6 +226,16 @@ Dati aggiornati al \italiaindicertdata.
 		\label{\r-\x}
 		\caption{\GetListMember{\fieldsregionitext}{\xi} in \GetListMember{\regionstext}{\ri}}
 		\end{figure}
+
+		\foreach \o [count=\oi] in \ondate 
+		{
+			\begin{figure}[H]
+			\centering
+			\includegraphics[width=\figureswidth]{\r-\x_\o.png}
+			\label{\r-\x-\o}
+				\caption{\GetListMember{\fieldsregionitext}{\xi} in \GetListMember{\regionstext}{\ri} (ondata \o)}
+			\end{figure}
+		}
 	}
 
 	\input{province_\r}
@@ -232,6 +254,16 @@ Dati aggiornati al \italiaindicertdata.
 				\label{\p-\xx}
 				\caption{\GetListMember{\fieldsprovincetext}{\xxi} in \GetListMember{\regioniprovincetext}{\pi}}
 			\end{figure}
+
+			\foreach \o [count=\oi] in \ondate 
+			{
+				\begin{figure}[H]
+				\centering
+				\includegraphics[width=\figureswidth]{\p-\xx_\o.png}
+				\label{\p-\xx-\o}
+					\caption{\GetListMember{\fieldsprovincetext}{\xxi} in \GetListMember{\regioniprovincetext}{\pi} (ondata \o)}
+				\end{figure}
+			}
 		}
 	}
 
