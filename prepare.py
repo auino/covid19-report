@@ -44,7 +44,8 @@ NEWS_PERIOD = '1d'
 ONDATE = [
 	{'name': 1, 'to':'2020-06'},
 	{'name': 2, 'from':'2020-10', 'to':'2020-12'},
-	{'name': 3, 'from':'2021-02'}
+	{'name': 3, 'from':'2021-02', 'to':'2020-06'},
+	{'name': 4, 'from':'2021-07'}
 ]
 
 # converts an input text t to simple lowercase text without special characters
