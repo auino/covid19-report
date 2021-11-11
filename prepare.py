@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import locale
 import datetime
 import requests
@@ -12,6 +13,7 @@ URL_ITALIA = 'https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-and
 URL_REGIONI = 'https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv'
 URL_PROVINCE = 'https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province.csv'
 URL_RT = 'https://raw.githubusercontent.com/CloudItaly/Indice-RT/main/File-JSON.json'
+URL_VACCINI = 'https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/vaccini-summary-latest.csv'
 
 STRINGS_KEYS_REGION = 'denominazione_regione'
 STRINGS_KEYS_PROVINCIA = 'denominazione_provincia'
@@ -22,6 +24,10 @@ STRINGS_KEYS_VARIAZIONEPOSITIVI = 'variazione_totale_positivi'
 STRINGS_KEYS_TAMPONI = 'tamponi'
 STRINGS_KEYS_NUOVITAMPONI = 'nuovi_tamponi'
 STRINGS_KEYS_NUOVIPOSITIVIOVERNUOVITAMPONI = 'nuovipositivi_su_nuovitamponi'
+STRINGS_KEYS_AREA = 'nome_area'
+STRINGS_KEYS_DOSISOMMINISTRATE = 'dosi_somministrate'
+STRINGS_KEYS_PERCENTUALESOMMINISTRAZIONE = 'percentuale_somministrazione'
+STRINGS_KEYS_ULTIMOAGGIORNAMENTO = 'ultimo_aggiornamento'
 STRINGS_FIELDS_PROVINCE = {
 	'totale_casi': 'Totale casi'
 }
@@ -62,6 +68,7 @@ def simpletext(t):
 def latexfriendlytext(t):
 	l = ['&', '%', '_', '#', '/']
 	for c in l: t = t.replace(c, '\\{}'.format(c))
+	t = t.encode('ascii', 'ignore').decode()
 	return t
 
 # returns the list of dates found in l, considering the date as the property k
@@ -242,15 +249,30 @@ def get_rt_data():
 		d = getregiondata(data, region)
 		generate_graph_rt(dates, d, region)
 
+def get_data_vaccini(region):
+	l = download(URL_VACCINI)
+	region = region.replace('Friuli Venezia', 'Friuli-Venezia')
+	region = region.replace('P.A.', 'Provincia Autonoma')
+	region = region.replace('Bolzano', 'Bolzano / Bozen')
+	region = region.replace('Valle d\'Aosta', 'Valle d\'Aosta / Vallée d\'Aoste')
+	data = filter(l, STRINGS_KEYS_AREA, region)
+	if len(data) == 0: return {}
+	data = data[0]
+	keys = [STRINGS_KEYS_DOSISOMMINISTRATE, STRINGS_KEYS_PERCENTUALESOMMINISTRAZIONE, STRINGS_KEYS_ULTIMOAGGIORNAMENTO]
+	r = {}
+	for k in keys:
+		v = data.get(k)
+		if k == STRINGS_KEYS_ULTIMOAGGIORNAMENTO: v = datetime.datetime.strptime(v, '%Y-%m-%d').strftime('%d %B %Y')
+		r[k] = v
+	return r
+
 def get_news():
 	r = []
 	gn = GoogleNews(lang=NEWS_LANG, country=NEWS_COUNTRY)
 	for s in NEWS_SEARCHES:
 		search = gn.search(s, when=NEWS_PERIOD)
 		r += search.get('entries')
-		print(r[0])
-		import time
-		time.sleep(100)
+		time.sleep(10)
 	return r
 
 # getting italian data
@@ -292,6 +314,8 @@ for regione in regioni:
 		if 'nuts' in k: continue
 		if r.get(k) == '': continue
 		array_map['regione'+k.replace('_', '')] = r.get(k)
+	d = get_data_vaccini(regione)
+	for k in d: array_map['regione'+k.replace('_', '')] = d.get(k)
 	save_tex_variables(array_map, './out/summary_regione_{}.tex'.format(simpletext(regione)))
 # getting all latest nuovipositivi_su_nuovitamponi data
 d = records_regioni[-1].get(STRINGS_KEYS_DATA)

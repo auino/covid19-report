@@ -13,6 +13,7 @@ L'ultima versione del report è disponibile all'interno del file [report-latest.
 * Report a livello nazionale, regionale e provinciale
 * Report generato a partire da un documento Latex
 * Integrazione con i dati della protezione civile (grazie a [@pcm-dpc](https://github.com/pcm-dpc/COVID-19))
+* Integrazione con i dati relativi alla somministrazione dei vaccini (grazie a [@italia](https://github.com/italia))
 * Integrazione con i dati relativi all'indice Rt (grazie a [@CloudItaly](https://github.com/CloudItaly/Indice-RT))
 * Integrazione con [Google News](http://news.google.com)
 * Supporto ad una visualizzazione specifica delle diverse ondate che caratterizzano la diffusione del virus
@@ -20,6 +21,7 @@ L'ultima versione del report è disponibile all'interno del file [report-latest.
 ### Sorgenti dati utilizzate ###
 
 * [pcm-dpc/COVID-19](https://github.com/pcm-dpc/COVID-19) per il recupero di dati a livello nazionale, regionale e provinciale
+* [italia/covid19-opendata-vaccini](https://github.com/italia/covid19-opendata-vaccini)] per il recupero dei dati relativi alla somministrazione dei vaccini
 * [CloudItaly/Indice-RT](https://github.com/CloudItaly/Indice-RT) per il recupero dei dati regionali relativi all'indice Rt misurato
 * [Google News](http://news.google.com) per ricerca di notizie in tema Covid-19
 
@@ -59,6 +61,8 @@ A seguire un elenco tentativo di miglioramenti da apportare (ogni aiuto è ben a
 
 * Miglioramento della presentazione del codice del software Python, migliorando i commenti e rendendolo più modulare al fine di agevolare eventuali estensioni
 * Miglioramento del report generato, aggiungendo fonti, bibliografia e migliorando i contenuti e la loro esposizione
+* Migliore supporto ai dati relativi alle vaccinazioni
+* Supporto a dati provenienti da altri paesi
 
 ### Contatti ###
 
