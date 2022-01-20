@@ -63,7 +63,7 @@ A seguire un elenco tentativo di miglioramenti da apportare (ogni aiuto è ben a
 * Miglioramento della presentazione del codice del software Python, migliorando i commenti e rendendolo più modulare al fine di agevolare eventuali estensioni
 * Miglioramento del report generato, aggiungendo fonti, bibliografia e migliorando i contenuti e la loro esposizione
 * Migliore supporto ai dati relativi alle vaccinazioni
-* Supporto a dati provenienti da altri paesi (ad esempio, sulla base dei dati disponibili su [CSSEGISandData/COVID-19](https://github.com/CSSEGISandData/COVID-19))
+* Supporto a dati provenienti da altri paesi (ad esempio, sulla base dei dati disponibili su [CSSEGISandData/COVID-19](https://github.com/CSSEGISandData/COVID-19) o integrando link ai report disponibili sul [sito ISS](https://www.epicentro.iss.it/coronavirus/sars-cov-2-sorveglianza-dati))
 
 ### Contatti ###
 
